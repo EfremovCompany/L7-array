@@ -52,10 +52,6 @@ public:
 	{
 		auto newItems = std::make_unique<T[]>(m_size + 1);
 		std::copy(m_items.get(), m_items.get() + m_size, newItems.get());
-		/*for (size_t i = 0; i < m_size; ++i)
-		{
-			newItems[i] = m_items[i];
-		}*/
 		newItems[m_size] = item;
 		m_items = std::move(newItems);
 		++m_size;
@@ -70,7 +66,7 @@ public:
 			if (oldSize > 0)
 			{
 				newItems[i] = m_items[i];
-				oldSize -= 1;
+				--oldSize;
 			}
 			else
 			{

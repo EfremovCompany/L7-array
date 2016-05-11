@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "MyArray.h"
 #include <string>
-#include <iostream>
 
 using namespace std;
 
@@ -97,7 +96,7 @@ BOOST_AUTO_TEST_CASE(TestClearMethod)
 
 }
 
-BOOST_AUTO_TEST_CASE(TestCopyConstructorAndOperatorOfAssignment)
+BOOST_AUTO_TEST_CASE(TestCopyingAndAssignment)
 {
 	{
 		CMyArray<string> strArr;
@@ -125,21 +124,28 @@ BOOST_AUTO_TEST_CASE(TestCopyConstructorAndOperatorOfAssignment)
 	}
 }
 
-BOOST_AUTO_TEST_CASE(DoubleArrayTest)
+BOOST_AUTO_TEST_CASE(EnsureResizeKeepsOldData)
 {
 	{
-		CMyArray<string> dobArr;
-		dobArr.Add("1.33");
-		dobArr.Add("1.43");
-		dobArr.Add("1.37");
-		dobArr.Add("1.23");
-		cout << dobArr[3];
+		CMyArray<double> dobArr;
+		CMyArray<double> doubleArray;
+		dobArr.Add(1.3);
+		dobArr.Add(1.43);
+		dobArr.Add(1.37);
+		dobArr.Add(1.23);
+		dobArr[0] = 1.33;
+		doubleArray = dobArr;
 		{
-			dobArr.Resize(5);
-			BOOST_CHECK_EQUAL(dobArr.GetSize(), 5);
-			BOOST_CHECK(!dobArr.IsEmpty());
+			doubleArray.Resize(5);
+			BOOST_CHECK_EQUAL(dobArr[0], 1.33);
+			BOOST_CHECK_EQUAL(doubleArray[0], 1.33);
+			BOOST_CHECK_EQUAL(doubleArray[1], 1.43);
+			BOOST_CHECK_EQUAL(doubleArray[2], 1.37);
+			BOOST_CHECK_EQUAL(doubleArray[3], 1.23);
+			BOOST_CHECK_EQUAL(doubleArray.GetSize(), 5u);
+			BOOST_CHECK(!doubleArray.IsEmpty());
 		}
-		BOOST_REQUIRE_NO_THROW(dobArr[0]);
+		BOOST_REQUIRE_NO_THROW(doubleArray[4]);
 	}
 }
 
