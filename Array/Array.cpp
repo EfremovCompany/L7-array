@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MyArray.h"
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -121,6 +122,24 @@ BOOST_AUTO_TEST_CASE(TestCopyConstructorAndOperatorOfAssignment)
 		BOOST_REQUIRE_NO_THROW(newArr[4]);
 		BOOST_CHECK_EQUAL(newArr.GetSize(), 5u);
 		BOOST_CHECK_EQUAL(newArr[4], "4");
+	}
+}
+
+BOOST_AUTO_TEST_CASE(DoubleArrayTest)
+{
+	{
+		CMyArray<string> dobArr;
+		dobArr.Add("1.33");
+		dobArr.Add("1.43");
+		dobArr.Add("1.37");
+		dobArr.Add("1.23");
+		cout << dobArr[3];
+		{
+			dobArr.Resize(5);
+			BOOST_CHECK_EQUAL(dobArr.GetSize(), 5);
+			BOOST_CHECK(!dobArr.IsEmpty());
+		}
+		BOOST_REQUIRE_NO_THROW(dobArr[0]);
 	}
 }
 

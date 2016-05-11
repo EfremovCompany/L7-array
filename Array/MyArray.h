@@ -1,4 +1,5 @@
 #pragma once
+
 #include <memory>
 
 template <typename T>
@@ -12,12 +13,11 @@ public:
 
 	CMyArray(CMyArray const& other)
 		:m_size(other.GetSize())
+		,m_items(std::make_unique<T[]>(m_size))
 	{
-		m_items = std::make_unique<T[]>(m_size);
-		for (size_t i = 0; i < m_size; ++i)
-		{
-			m_items[i] = other[i];
-		}
+		auto newItems = std::make_unique<T[]>(m_size);
+		std::copy(other.m_items.get(), other.m_items.get() + m_size, newItems.get());
+		m_items = std::move(newItems);
 	}
 
 	~CMyArray()
@@ -51,10 +51,11 @@ public:
 	void Add(T const & item)
 	{
 		auto newItems = std::make_unique<T[]>(m_size + 1);
-		for (size_t i = 0; i < m_size; ++i)
+		std::copy(m_items.get(), m_items.get() + m_size, newItems.get());
+		/*for (size_t i = 0; i < m_size; ++i)
 		{
 			newItems[i] = m_items[i];
-		}
+		}*/
 		newItems[m_size] = item;
 		m_items = std::move(newItems);
 		++m_size;
@@ -64,8 +65,7 @@ public:
 	{
 		auto newItems = std::make_unique<T[]>(newSize);
 		size_t oldSize = m_size;
-		size_t i = 0;
-		while (newSize > i)
+		for (size_t i = 0; newSize > i; i++)
 		{
 			if (oldSize > 0)
 			{
@@ -76,7 +76,6 @@ public:
 			{
 				newItems[i] = T();
 			}
-			++i;
 		}
 		m_items = std::move(newItems);
 		m_size = newSize;
